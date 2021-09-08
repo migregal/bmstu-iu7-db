@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    container_name: postgresdbcourse
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-migregal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data/
+      - ./dataset:/dataset
+      - ./queries:/queries
+    ports:
+      - 5432:5432
