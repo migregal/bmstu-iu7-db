@@ -58,14 +58,26 @@ CREATE UNIQUE INDEX IF NOT EXISTS usr_email_idx ON users (email);
 CREATE UNIQUE INDEX IF NOT EXISTS usr_phone_idx ON users (phone);
 COPY users FROM '/dataset/users.csv' DELIMITER ',' CSV HEADER;
 
+
+CREATE TABLE comments (
+    id                  UUID PRIMARY KEY DEFAULT uuid_generate_v4()
+    , parent_id         UUID             REFERENCES comments(id) ON DELETE CASCADE
+    , user_id           UUID             REFERENCES users(id)    ON DELETE CASCADE
+    , date              TIMESTAMP        NOT NULL   DEFAULT now()
+    , comment           VARCHAR(2000)
+);
+CREATE UNIQUE INDEX IF NOT EXISTS comment_idx ON comments (id, parent_id);
+COPY comments FROM '/dataset/comments.csv' DELIMITER ',' CSV HEADER;
+
+
 CREATE TABLE reviews (
     id                  UUID PRIMARY KEY DEFAULT uuid_generate_v4()
     , shop_id           UUID             NOT NULL
     , good_id           UUID             NOT NULL
     , employee_id       UUID             NOT NULL
     , reviewer_id       UUID             NOT NULL
+    , comment_id        UUID
     , date              TIMESTAMP        NOT NULL   DEFAULT now()
-    , comment           VARCHAR(2000)
     , good_rating       DECIMAL(4,2)     NOT NULL
     , shop_rating       DECIMAL(4,2)     NOT NULL
     , employee_rating   DECIMAL(4,2)     NOT NULL
@@ -76,6 +88,7 @@ CREATE TABLE reviews (
     , FOREIGN KEY (good_id)     REFERENCES goods(id)        ON DELETE CASCADE
     , FOREIGN KEY (employee_id) REFERENCES employees(id)    ON DELETE CASCADE
     , FOREIGN KEY (reviewer_id) REFERENCES users(id)        ON DELETE CASCADE
+    , FOREIGN KEY (comment_id)  REFERENCES comments(id)     ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX IF NOT EXISTS review_idx ON reviews (shop_id, good_id, employee_id, reviewer_id);
 COPY reviews FROM '/dataset/reviews.csv' DELIMITER ',' CSV HEADER;

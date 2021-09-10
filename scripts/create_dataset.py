@@ -5,10 +5,12 @@ from enum import unique
 from faker import Faker
 from os import path as p, pardir
 import random
+from copy import copy
 
 
 goods_id, users_id = [], []
 employees_id, shops_id = [], []
+comments_id = []
 
 def create_goods(dataset: str, count: int = 1000):
     global goods_id
@@ -135,21 +137,52 @@ def create_users(dataset: str, count: int = 1000):
             )
 
 
-def create_reviews(dataset: str, count: int = 1000, max_rating: float = 10.0):
-    global shops_id, employees_id, goods_id, users_id
-
-    # def get_ids(fname: str):
-    #     ids = set()
-    #     with open(p.join(dataset, fname), "r", newline='') as fin:
-    #         ids |= {l['id'] for l in csv.DictReader(fin, delimiter=',')}
-    #     return list(ids)
+def create_comments(dataset: str, count: int = 1000):
+    global users_id, comments_id
 
     fake = Faker()
 
-    # shops_id = get_ids("shops.csv")
-    # goods_id = get_ids("goods.csv")
-    # employees_id = get_ids("employees.csv")
-    # users_id = get_ids("users.csv")
+    def make_tree(parent, depth, max_children, max_depth):
+        if depth > max_depth:
+            return []
+
+        nodes = []
+        for i in range(count if depth == 0 else random.randint(1, max_children)):
+            nodes.append([fake.unique.uuid4(), parent])
+
+        for node in copy(nodes):
+            nodes.extend(make_tree(node[0], depth + 1, max_children, max_depth))
+
+        return nodes
+
+    with open(p.join(dataset, "comments.csv"), "w", newline='') as csv_file:
+        writer = csv.writer(csv_file, delimiter=',')
+        writer.writerow(
+            [
+                'id',
+                'parent_id',
+                'user_id',
+                'date',
+                'comment'
+            ]
+        )
+        for c in make_tree(None, 0, random.randint(1, 4), random.randint(1, 4)):
+            if (c[1] is None):
+                comments_id.append(c[0])
+            writer.writerow(
+                [
+                    c[0],
+                    c[1],
+                    random.sample(users_id, 1)[0],
+                    fake.date_time_this_century().isoformat(),
+                    fake.text()[:2000]
+                ]
+            )
+
+def create_reviews(dataset: str, count: int = 1000, max_rating: float = 10.0):
+    global shops_id, employees_id, goods_id, users_id, comments_id
+
+    fake = Faker()
 
     with open(p.join(dataset, "reviews.csv"), "w", newline='') as csv_file:
         writer = csv.writer(csv_file, delimiter=',')
@@ -160,14 +193,16 @@ def create_reviews(dataset: str, count: int = 1000, max_rating: float = 10.0):
                 'good_id',
                 'employee_id',
                 'reviewer_id',
+                'comment_id',
                 'date',
-                'comment',
                 'good_rating',
                 'shop_rating',
                 'employee_rating',
             ]
         )
+
         for i in range(count):
+            c = random.sample(comments_id, 1)[0]
             writer.writerow(
                 [
                     fake.unique.uuid4(),
@@ -175,13 +210,14 @@ def create_reviews(dataset: str, count: int = 1000, max_rating: float = 10.0):
                     random.sample(goods_id, 1)[0],
                     random.sample(employees_id, 1)[0],
                     random.sample(users_id, 1)[0],
+                    c,
                     fake.date_time_this_century().isoformat(),
-                    fake.text()[:2000],
                     max_rating * random.random(),
                     max_rating * random.random(),
                     max_rating * random.random(),
                 ]
             )
+            comments_id.remove(c)
 
 def run_io_tasks_in_parallel(tasks):
     with ThreadPoolExecutor() as executor:
@@ -195,17 +231,23 @@ def main():
 
     size = 1000
 
-    print("parallel part", datetime.datetime.now().strftime("%H:%M:%S"))
+    print("parallel part  ", datetime.datetime.now().strftime("%H:%M:%S"))
     run_io_tasks_in_parallel([
         lambda: create_goods(dataset, size),
         lambda: create_shops(dataset, size),
         lambda: create_users(dataset, size),
     ])
 
+    print("parallel part 2", datetime.datetime.now().strftime("%H:%M:%S"))
+    run_io_tasks_in_parallel([
+        lambda: create_employees(dataset, size),
+        lambda: create_comments(dataset, size)
+    ])
+
     print("normal part", datetime.datetime.now().strftime("%H:%M:%S"))
-    create_employees(dataset, size)
     create_reviews(dataset, size)
 
+    print("finished", datetime.datetime.now().strftime("%H:%M:%S"))
 
 if __name__ == "__main__":
     main()
