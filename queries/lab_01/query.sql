@@ -23,7 +23,7 @@ CREATE TABLE shops (
     , name          VARCHAR(30)                 NOT NULL
     , latitude      DECIMAL(20,14)
     , longitude     DECIMAL(20,14)
-    , registered    DATE                        NOT NULL
+    , registered    DATE                        NOT NULL DEFAULT now()
 );
 CREATE UNIQUE INDEX IF NOT EXISTS shop_cmpn_idx ON shops (company, name, registered);
 COPY shops FROM '/dataset/shops.csv' DELIMITER ',' CSV HEADER;
@@ -64,7 +64,7 @@ CREATE TABLE reviews (
     , good_id           UUID             NOT NULL
     , employee_id       UUID             NOT NULL
     , reviewer_id       UUID             NOT NULL
-    , date              TIMESTAMP        NOT NULL
+    , date              TIMESTAMP        NOT NULL   DEFAULT now()
     , comment           VARCHAR(2000)
     , good_rating       DECIMAL(4,2)     NOT NULL
     , shop_rating       DECIMAL(4,2)     NOT NULL
