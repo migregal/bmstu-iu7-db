@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  app:
+    build:
+      context: ./coke
+    container_name: appdbcourse
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+
   db:
     build:
       context: .
