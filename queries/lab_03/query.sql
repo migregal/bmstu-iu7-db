@@ -196,10 +196,10 @@ BEGIN
     GROUP BY g.manufacturer
     INTO mnfctr, goodscount;
     IF goodscount >= 3 THEN
-        RAISE EXCEPTION '% already have more than 3 listings on booking. Aborting.', mnfctr;
+        RAISE EXCEPTION '% already have more than 3 goods in system. Aborting.', mnfctr;
         RETURN NULL;
     ELSE
-        RAISE NOTICE '% listings left for %', 2 - goodscount, mnfctr;
+        RAISE NOTICE '% goods left for %', 2 - goodscount, mnfctr;
         INSERT INTO goods (
             id
             , name
