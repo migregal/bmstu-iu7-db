@@ -15,6 +15,7 @@ require (
 	github.com/gobuffalo/suite v2.8.2+incompatible
 	github.com/gobuffalo/x v0.1.0
 	github.com/markbates/grift v1.5.0
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/cors v1.8.0
 	github.com/unrolled/secure v1.0.9
 )

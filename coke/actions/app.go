@@ -42,7 +42,7 @@ func App() *buffalo.App {
 			Env:          ENV,
 			SessionStore: sessions.Null{},
 			PreWares: []buffalo.PreWare{
-				cors.Default().Handler,
+				cors.AllowAll().Handler,
 			},
 			SessionName: "_coke_session",
 		})
@@ -62,6 +62,10 @@ func App() *buffalo.App {
 		app.Use(popmw.Transaction(models.DB))
 
 		app.GET("/", HomeHandler)
+		app.POST("/admin/meta/", AdminMetaHandler)
+		app.POST("/query/companies/", CompaniesHandler)
+		app.POST("/query/shops/", ShopsHandler)
+		app.POST("/query/employees/", EmployeesHandler)
 	}
 
 	return app

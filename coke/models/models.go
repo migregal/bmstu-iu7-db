@@ -7,8 +7,6 @@ import (
 	"github.com/gobuffalo/pop/v5"
 )
 
-// DB is a connection to your database to be used
-// throughout your application.
 var DB *pop.Connection
 
 func init() {
