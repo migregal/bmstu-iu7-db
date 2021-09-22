@@ -1,14 +1,27 @@
 version: '3.8'
 
 services:
+  react-frontend:
+    container_name: frontdbcourse
+    build:
+      context: ./front
+      target: production
+    ports:
+      - 3000:3000
+      - 8000:80
+    depends_on:
+      - db
+      - app
+
   app:
     build:
       context: ./coke
     container_name: appdbcourse
     ports:
-      - 3000:3000
+      - 5000:5000
     depends_on:
       - db
+    restart: unless-stopped
 
   db:
     build:
@@ -27,3 +40,4 @@ services:
       - ./queries:/queries
     ports:
       - 5432:5432
+    restart: unless-stopped
