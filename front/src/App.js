@@ -15,8 +15,11 @@ function App() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="/">Home</Nav.Link>
+              <NavDropdown title="Stats">
+                <NavDropdown.Item href="/reviews/stats/">Reviews</NavDropdown.Item>
+              </NavDropdown>
               <NavDropdown title="Admin" id="basic-nav-dropdown">
-                <NavDropdown.Item href="admin/meta/">Meta</NavDropdown.Item>
+                <NavDropdown.Item href="/admin/meta/">Meta</NavDropdown.Item>
                 {/* <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                 <NavDropdown.Divider />

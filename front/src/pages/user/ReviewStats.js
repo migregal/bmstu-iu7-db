@@ -2,11 +2,14 @@ import React, { useRef } from 'react';
 
 import { Container } from 'react-bootstrap';
 
-import BootstrapTable from 'react-bootstrap-table-next';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { getReviewsStats } from '../../utils/requests';
 
-import { getDatabaseMeta } from '../../utils/requests';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-export default function DatabaseMeta() {
+export default function ReviewStats() {
+    const { height, width } = useWindowDimensions();
+
     const lock = useRef(false);
     const [state, setState] = React.useState({
         error: null,
@@ -23,7 +26,7 @@ export default function DatabaseMeta() {
             busy: true
         }));
 
-        getDatabaseMeta()
+        getReviewsStats()
             .then(data => {
                 setState(state => ({
                     ...state,
@@ -49,14 +52,22 @@ export default function DatabaseMeta() {
 
     return (
         <Container style={{ "marginTop": "96px", "marginBottom": "20px" }}>
-            {state.list && state.list.length >= 1 &&
-                <BootstrapTable keyField='id' data={state.list} columns={
-                Object.keys(state.list[0]).map((key) =>
-                    ({dataField: key, text: key})
-                )
-
-                }/>
+            {state.list &&
+                <LineChart
+                    cx={0.5 * width}
+                    width={0.8 * width} height={0.7 * height} data={state.list}
+                    margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                    <Legend verticalAlign="top" height={36} />
+                    <Line name="Positive (avg rating > 7)"  type="monotone" dataKey="positive" stroke="#0A0" />
+                    <Line name="Neutral" type="monotone" dataKey="neutral" stroke="#AAA" />
+                    <Line name="Negative (avg rating < 3)"  type="monotone" dataKey="negative" stroke="#A00" />
+                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip />
+                </LineChart>
             }
+
         </Container>
     );
 }

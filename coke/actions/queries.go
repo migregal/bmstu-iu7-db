@@ -6,6 +6,7 @@ import (
 	"github.com/gobuffalo/pop/v5"
 	"github.com/pkg/errors"
 	"net/http"
+	"strings"
 
 	"github.com/gobuffalo/buffalo"
 )
@@ -17,7 +18,9 @@ func CompaniesHandler(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 	var shops []models.Shop
-	err = models.DB.Where("company LIKE (?)", "%"+req.Company+"%").All(&shops)
+	err = models.DB.Where(
+		"lower(company) LIKE (?)",
+		"%"+strings.ToLower(req.Company)+"%").All(&shops)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -31,7 +34,10 @@ func ShopsHandler(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 	var shops []models.Shop
-	err = models.DB.Where("company LIKE (?) AND name LIKE (?)", "%"+req.Company+"%", "%"+req.Shop+"%").All(&shops)
+	err = models.DB.Where(
+		"lower(company) LIKE (?) AND lower(name) LIKE (?)",
+		"%"+strings.ToLower(req.Company)+"%",
+		"%"+strings.ToLower(req.Shop)+"%").All(&shops)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -52,6 +58,7 @@ func EmployeesHandler(c buffalo.Context) error {
 		Order("employees.last_name, employees.first_name").
 		Paginate(req.Page, req.PerPage)
 
+
 	sql, args := query.ToSQL(&pop.Model{Value: models.Employee{}},
 		"s.company",
 		"employees.job",
@@ -60,9 +67,19 @@ func EmployeesHandler(c buffalo.Context) error {
 		"ROUND(COALESCE(AVG(r.employee_rating), 0.0)::numeric,2) as rating")
 
 	var employees []models.Employee
-	err = query.RawQuery(sql, args...).All(&employees)
+	query = query.RawQuery(sql, args...)
+	//count, _ := query.Count(models.Employee{})
+	err = query.All(&employees)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 	return c.Render(http.StatusOK, r.JSON(employees))
+}
+
+func ReviewsHandler(c buffalo.Context) error {
+	var reviews []models.ReviewStats
+	if err := models.DB.All(&reviews); err != nil {
+		return errors.WithStack(err)
+	}
+	return c.Render(http.StatusOK, r.JSON(reviews))
 }
