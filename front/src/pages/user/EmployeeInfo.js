@@ -6,7 +6,7 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 
 import BootstrapTable from 'react-bootstrap-table-next';
 
-import { getCompaniesList, getEmployeesList, getShopsList } from '../../utils/requests';
+import { getCompaniesList, getEmployeesList, getShopsList, raiseSalary } from '../../utils/requests';
 
 export default function EmployeeInfo() {
     const [state, setState] = React.useState({
@@ -54,6 +54,21 @@ export default function EmployeeInfo() {
 
     const handleSearch = async () => {
         try {
+            const data = await getEmployeesList(state.company, state.shop)
+            setState(state => ({
+                ...state,
+                employees: data
+            }))
+        } catch (e) {
+
+        }
+    }
+
+    const handleSalaryRise = async () => {
+        try {
+            for (const empl of state.employees) {
+                await raiseSalary(empl.id, 500)
+            }
             const data = await getEmployeesList(state.company, state.shop)
             setState(state => ({
                 ...state,
@@ -116,12 +131,21 @@ export default function EmployeeInfo() {
             <Container>
                 {state.employees && state.employees.length >= 1 &&
                     <BootstrapTable keyField='id' data={state.employees} columns={
-                        Object.keys(state.employees[0]).map((key) =>
+                        Object.keys(state.employees[0]).filter((obj) => obj != 'id').map((key) =>
                             ({ dataField: key, text: key })
                         )
-
                     } />
                 }
+            </Container>
+            <Container>
+                <div style={{ display: 'flex', justifyContent: 'right' }}>
+                {state.employees && <Button
+                    variant="success"
+                    disabled={state.isLoading}
+                    onClick={!state.isLoading ? handleSalaryRise : null}>
+                    {state.isLoading ? 'Loading…' : 'Rise salary'}
+                </Button>}
+                </div>
             </Container>
         </div>
     );

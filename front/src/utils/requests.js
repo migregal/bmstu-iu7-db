@@ -129,6 +129,29 @@ export function getReviewsStats(period, step, low, high) {
         })
 }
 
+export function raiseSalary(employee, delta) {
+    return fetch(process.env.REACT_APP_REQ_URL + "query/employees/raise/", {
+        method: "POST",
+        headers: {
+            Authorization: null,
+            'Content-Type': 'application/json;charset=utf-8',
+        },
+        cache: 'no-cache',
+        keepalive: false,
+        body: JSON.stringify({
+            employee: employee,
+            delta: delta
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(response.status.toString())
+            }
+
+            return response.json();
+        })
+}
+
 export function getManufacturerInfo(manufacturer) {
     return fetch(process.env.REACT_APP_REQ_URL + "query/manufacturers/info/", {
         method: "POST",
