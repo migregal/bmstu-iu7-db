@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 
 import BootstrapTable from 'react-bootstrap-table-next';
 
-import { getDatabaseMeta } from '../../utils/requests';
+import { getDatabaseMeta, getDatabaseVersion } from '../../utils/requests';
 
 export default function DatabaseMeta() {
     const lock = useRef(false);
@@ -13,7 +13,8 @@ export default function DatabaseMeta() {
         msg: null,
         id: null,
         alertDialog: false,
-        list: null
+        list: null,
+        version: ""
     })
 
     React.useEffect(() => {
@@ -23,13 +24,32 @@ export default function DatabaseMeta() {
             busy: true
         }));
 
-        getDatabaseMeta()
+        const getDBMeta = () => {
+            getDatabaseMeta()
+                .then(data => {
+                    setState(state => ({
+                        ...state,
+                        error: null,
+                        list: data
+                    }))
+                })
+                .finally(() => {
+                    setState(state => ({
+                        ...state,
+                        busy: false
+                    }))
+                    lock.current = false;
+                });
+        }
+
+        getDatabaseVersion()
             .then(data => {
                 setState(state => ({
                     ...state,
                     error: null,
-                    list: data
+                    version: data.version
                 }))
+                getDBMeta()
             })
             .catch(error => {
                 setState(state => ({
@@ -38,17 +58,12 @@ export default function DatabaseMeta() {
                     msg: error.message
                 }))
             })
-            .finally(() => {
-                setState(state => ({
-                    ...state,
-                    busy: false
-                }))
-                lock.current = false;
-            });
     }, []);
 
     return (
         <Container style={{ "marginTop": "96px", "marginBottom": "20px" }}>
+            {state.version &&
+            <h3>{state.version}</h3>}
             {state.list && state.list.length >= 1 &&
                 <BootstrapTable keyField='id' data={state.list} columns={
                 Object.keys(state.list[0]).map((key) =>

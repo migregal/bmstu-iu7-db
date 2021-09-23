@@ -12,3 +12,11 @@ type PgDatabase struct {
 func (p PgDatabase) TableName() string {
 	return "pg_database"
 }
+
+type PgDatabaseVersion struct {
+	Version  string `db:"version" select:"version" json:"version"`
+}
+
+func (p PgDatabaseVersion) TableName() string {
+	return "pg_database"
+}

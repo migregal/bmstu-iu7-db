@@ -63,6 +63,7 @@ func App() *buffalo.App {
 
 		app.GET("/", HomeHandler)
 		app.POST("/admin/meta/", AdminMetaHandler)
+		app.POST("/admin/meta/version/", AdminMetaVersionHandler)
 		app.POST("/query/companies/", CompaniesHandler)
 		app.POST("/query/shops/", ShopsHandler)
 		app.POST("/query/employees/", EmployeesHandler)

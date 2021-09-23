@@ -1,3 +1,23 @@
+export function getDatabaseVersion() {
+    return fetch(process.env.REACT_APP_REQ_URL + "admin/meta/version/", {
+        method: "POST",
+        headers: {
+            Authorization: null,
+            'Content-Type': 'application/json;charset=utf-8',
+        },
+        cache: 'no-cache',
+        keepalive: false,
+        body: JSON.stringify({}),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(response.status.toString())
+            }
+
+            return response.json();
+        })
+}
+
 export function getDatabaseMeta() {
     return fetch(process.env.REACT_APP_REQ_URL + "admin/meta/", {
         method: "POST",
