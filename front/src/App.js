@@ -17,6 +17,7 @@ function App() {
               <Nav.Link href="/">Home</Nav.Link>
               <NavDropdown title="Stats">
                 <NavDropdown.Item href="/reviews/stats/">Reviews</NavDropdown.Item>
+                <NavDropdown.Item href="/manufacturers/list/">Manufacturers</NavDropdown.Item>
               </NavDropdown>
               <NavDropdown title="Admin" id="basic-nav-dropdown">
                 <NavDropdown.Item href="/admin/meta/">Meta</NavDropdown.Item>

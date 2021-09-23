@@ -7,6 +7,7 @@ import {
 import EmployeeInfo from './EmployeeInfo.js'
 import DatabaseMeta from "./DatabaseMeta.js";
 import ReviewStats from "./ReviewStats.js";
+import ManufacturerInfo from "./ManufacturerInfo.js";
 
 export default function User() {
     return (
@@ -16,6 +17,9 @@ export default function User() {
             </Route>
             <Route path="/reviews/stats">
                 <ReviewStats />
+            </Route>
+            <Route path="/manufacturers/list">
+                <ManufacturerInfo />
             </Route>
             <Route path="/">
                 <EmployeeInfo />

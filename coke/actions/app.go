@@ -68,6 +68,8 @@ func App() *buffalo.App {
 		app.POST("/query/employees/", EmployeesHandler)
 		app.POST("/query/reviews/count/", ReviewsCountHandler)
 		app.POST("/query/reviews/stats/", ReviewsStatsHandler)
+		app.POST("/query/manufacturers/info/", ManufacturerInfoHandler)
+		app.POST("/query/manufacturers/", ManufacturerListHandler)
 	}
 
 	return app
