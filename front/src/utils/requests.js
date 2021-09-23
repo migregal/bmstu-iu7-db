@@ -79,7 +79,32 @@ export function getEmployeesList(company_name, shop_name) {
         })
 }
 
-export function getReviewsStats() {
+export function getReviewsCount(period, step, low, high) {
+    return fetch(process.env.REACT_APP_REQ_URL + "query/reviews/count/", {
+        method: "POST",
+        headers: {
+            Authorization: null,
+            'Content-Type': 'application/json;charset=utf-8',
+        },
+        cache: 'no-cache',
+        keepalive: false,
+        body: JSON.stringify({
+            period: period,
+            step: step,
+            low: low,
+            high: high
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(response.status.toString())
+            }
+
+            return response.json();
+        })
+}
+
+export function getReviewsStats(period, step, low, high) {
     return fetch(process.env.REACT_APP_REQ_URL + "query/reviews/stats/", {
         method: "POST",
         headers: {
@@ -88,6 +113,12 @@ export function getReviewsStats() {
         },
         cache: 'no-cache',
         keepalive: false,
+        body: JSON.stringify({
+            period: period,
+            step: step,
+            low: low,
+            high: high
+        })
     })
         .then(response => {
             if (!response.ok) {
