@@ -1,3 +1,5 @@
+\c dbcourse;
+
 CREATE OR REPLACE FUNCTION get_avg_review_rating(shop DECIMAL, employee DECIMAL, good DECIMAL)
 RETURNS DECIMAL AS $$
 BEGIN
@@ -25,7 +27,6 @@ BEGIN
     SELECT * FROM tbl;
 END;
 $$ LANGUAGE PLPGSQL;
-SELECT * FROM find_manufacturer_goods('Wilson and Sons');
 
 CREATE OR REPLACE PROCEDURE change_employee_salary(employee UUID, change DECIMAL)
 AS $$
@@ -36,17 +37,3 @@ BEGIN
     COMMIT;
 END;
 $$ LANGUAGE PLPGSQL;
-CALL change_employee_salary('008de1fa-206b-41df-a304-e45397b55d1b', 1000);
-
--- DROP VIEW review_stats;
--- CREATE OR REPLACE VIEW review_stats AS
---     SELECT EXTRACT('week' FROM date_trunc('week', r.date)) "date"
---      , AVG(get_avg_review_rating(r.shop_rating, r.good_rating, r.employee_rating)) average
---      , count(*) FILTER (WHERE get_avg_review_rating(r.shop_rating, r.good_rating, r.employee_rating) < 4) negative
---      , count(*) FILTER (WHERE get_avg_review_rating(r.shop_rating, r.good_rating, r.employee_rating) between 4 and 7) neutral
---      , count(*) FILTER (WHERE get_avg_review_rating(r.shop_rating, r.good_rating, r.employee_rating) > 7) positive
---      , count(*) total
--- FROM reviews r
--- WHERE date_part('year', r.date) = date_part('year', CURRENT_DATE)
--- GROUP BY date_trunc('week', r.date)
--- ORDER BY date_trunc('week', r.date) ASC;
