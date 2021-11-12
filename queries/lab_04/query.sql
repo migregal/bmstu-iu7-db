@@ -15,7 +15,7 @@ SELECT id
 FROM reviews;
 
 -- 2
-CREATE OR REPLACE FUNCTION get_avg_review_rating_py()
+CREATE OR REPLACE FUNCTION get_total_avg_review_rating_py()
 RETURNS DECIMAL
 AS $$
     query = "select get_avg_review_rating_py(shop_rating, employee_rating, good_rating) from reviews;"
@@ -23,10 +23,10 @@ AS $$
     qsum = 0
     qlen = len(result)
     for x in result:
-        qsum += x["get_minimal_spendings_py"]
+        qsum += x["get_avg_review_rating_py"]
     return qsum / qlen
 $$ LANGUAGE PLPYTHON3U;
-SELECT get_avg_review_rating_py();
+SELECT get_total_avg_review_rating_py();
 
 -- 3
 CREATE OR REPLACE FUNCTION find_manufacturer_goods_py(mnfctr VARCHAR)
