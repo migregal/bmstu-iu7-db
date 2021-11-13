@@ -1,19 +1,23 @@
 \c dbcourse
 
-\t \a \o /dataset/goods.json
+\t \a
+
+\o /dataset/goods.json
 SELECT ROW_TO_JSON(g) FROM goods g;
 
-\t \a \o /dataset/shops.json
+\o /dataset/shops.json
 SELECT ROW_TO_JSON(s) FROM shops s;
 
-\t \a \o /dataset/employees.json
+\o /dataset/employees.json
 SELECT ROW_TO_JSON(e) FROM employees e;
 
-\t \a \o /dataset/users.json
+\o /dataset/users.json
 SELECT ROW_TO_JSON(u) FROM users u;
 
-\t \a \o /dataset/reviews.json
+\o /dataset/reviews.json
 SELECT ROW_TO_JSON(r) FROM reviews r;
+
+\o
 
 DROP TABLE IF EXISTS shops_from_json;
 CREATE TABLE shops_from_json (
