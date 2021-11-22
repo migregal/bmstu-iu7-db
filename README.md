@@ -7,6 +7,8 @@
 
 ## Lab 01
 * [scheme](https://github.com/migregal/bmstu_iu7_db/tree/master/docs)
+* [data generation (via `python`)](https://github.com/migregal/bmstu_iu7_db/tree/master/scripts)
+* [data generation (via `golang`)](https://github.com/migregal/bmstu_iu7_db/tree/master/goscripts)
 * [sql script](https://github.com/migregal/bmstu_iu7_db/blob/master/queries/lab_01/query.sql)
 
 ## Lab 02
