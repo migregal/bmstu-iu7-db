@@ -1,27 +1,27 @@
-version: '3.8'
+version: '3.9'
 
 services:
-  react-frontend:
-    container_name: frontdbcourse
-    build:
-      context: ./front
-      target: production
-    ports:
-      - 3000:3000
-      - 8000:80
-    depends_on:
-      - db
-      - app
+ react-frontend:
+   container_name: frontdbcourse
+   build:
+     context: ./lab_06/front
+     target: production
+   ports:
+     - 3000:3000
+     - 8000:80
+   depends_on:
+     - db
+     - app
 
-  app:
-    build:
-      context: ./coke
-    container_name: appdbcourse
-    ports:
-      - 5000:5000
-    depends_on:
-      - db
-    restart: unless-stopped
+ app:
+   build:
+     context: ./lab_06/coke
+   container_name: appdbcourse
+   ports:
+     - 5000:5000
+   depends_on:
+     - db
+   restart: unless-stopped
 
   db:
     build:
@@ -35,9 +35,14 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
       PGDATA: /data/postgres
     volumes:
-      - ./data/db:/var/lib/postgresql/data/
+      - ./data/db:/var/lib/postgresql/data
       - ./dataset:/dataset
-      - ./queries:/queries
+      - ./lab_01:/lab_01
+      - ./lab_02:/lab_02
+      - ./lab_03:/lab_03
+      - ./lab_04:/lab_04
+      - ./lab_05:/lab_05
+      - ./lab_06:/lab_06
     ports:
       - 5432:5432
     restart: unless-stopped
