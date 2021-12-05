@@ -1,27 +1,27 @@
 version: '3.9'
 
 services:
- react-frontend:
-   container_name: frontdbcourse
-   build:
-     context: ./lab_06/front
-     target: production
-   ports:
-     - 3000:3000
-     - 8000:80
-   depends_on:
-     - db
-     - app
+  react-frontend:
+    container_name: frontdbcourse
+    build:
+      context: ./lab_06/front
+      target: production
+    ports:
+      - 3000:3000
+      - 8000:80
+    depends_on:
+      - db
+      - app
 
- app:
-   build:
-     context: ./lab_06/coke
-   container_name: appdbcourse
-   ports:
-     - 5000:5000
-   depends_on:
-     - db
-   restart: unless-stopped
+  app:
+    build:
+      context: ./lab_06/coke
+    container_name: appdbcourse
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+    restart: unless-stopped
 
   db:
     build:
@@ -35,7 +35,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
       PGDATA: /data/postgres
     volumes:
-      - ./data/db:/var/lib/postgresql/data
       - ./dataset:/dataset
       - ./lab_01:/lab_01
       - ./lab_02:/lab_02
@@ -43,6 +42,19 @@ services:
       - ./lab_04:/lab_04
       - ./lab_05:/lab_05
       - ./lab_06:/lab_06
+      - ./lab_08:/lab_08
     ports:
       - 5432:5432
     restart: unless-stopped
+
+  nifi:
+    image: apache/nifi:latest
+    container_name: nifidbcourse
+    environment:
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_JVM_HEAP_INIT=2g
+      - NIFI_JVM_HEAP_MAX=4g
+    volumes:
+      - ./lab_08:/opt/nifi/nifi-current/userdata
+    ports:
+      - 8080:8080
