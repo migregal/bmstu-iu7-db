@@ -1,6 +1,12 @@
 version: '3.9'
 
 services:
+  redis-cache:
+    image: "redis:alpine"
+    container_name: cachedbcourse
+    ports:
+      - 6379:6379
+
   react-frontend:
     container_name: frontdbcourse
     build:
@@ -21,6 +27,7 @@ services:
       - 5000:5000
     depends_on:
       - db
+      - redis-cache
     restart: unless-stopped
 
   db:

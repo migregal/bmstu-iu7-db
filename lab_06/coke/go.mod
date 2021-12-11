@@ -3,6 +3,8 @@ module coke
 go 1.16
 
 require (
+	github.com/go-redis/cache/v8 v8.4.3
+	github.com/go-redis/redis/v8 v8.11.4
 	github.com/gobuffalo/buffalo v0.17.3
 	github.com/gobuffalo/buffalo-pop/v2 v2.3.0
 	github.com/gobuffalo/envy v1.9.0
@@ -15,7 +17,7 @@ require (
 	github.com/gobuffalo/suite v2.8.2+incompatible
 	github.com/gobuffalo/x v0.1.0
 	github.com/markbates/grift v1.5.0
-	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pkg/errors v0.9.1
 	github.com/rs/cors v1.8.0
 	github.com/unrolled/secure v1.0.9
 )

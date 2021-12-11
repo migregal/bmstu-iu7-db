@@ -1,6 +1,8 @@
 package actions
 
 import (
+	"context"
+
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/envy"
 	forcessl "github.com/gobuffalo/mw-forcessl"
@@ -9,6 +11,7 @@ import (
 	"github.com/gobuffalo/packr/v2"
 	"github.com/unrolled/secure"
 
+	"coke/external"
 	"coke/models"
 
 	"github.com/gobuffalo/buffalo-pop/v2/pop/popmw"
@@ -22,6 +25,9 @@ import (
 var ENV = envy.Get("GO_ENV", "development")
 var app *buffalo.App
 var T *i18n.Translator
+
+var ctx = context.Background()
+var redis *external.RedisDatabase
 
 // App is where all routes and middleware for buffalo
 // should be defined. This is the nerve center of your
@@ -38,6 +44,12 @@ var T *i18n.Translator
 // declared after it to never be called.
 func App() *buffalo.App {
 	if app == nil {
+		var err error
+		redis, err = external.NewRedisDatabase("172.17.0.1:6379", "")
+		if err != nil {
+			panic(err)
+		}
+
 		app = buffalo.New(buffalo.Options{
 			Env:          ENV,
 			SessionStore: sessions.Null{},
@@ -70,6 +82,8 @@ func App() *buffalo.App {
 		app.POST("/query/employees/raise/", RaiseEmployeeSalary)
 		app.POST("/query/reviews/count/", ReviewsCountHandler)
 		app.POST("/query/reviews/stats/", ReviewsStatsHandler)
+		app.POST("/query/reviews/insert/", ReviewsInsertionHandler)
+		app.POST("/query/reviews/delete/", ReviewsDeleteHandler)
 		app.POST("/query/manufacturers/info/", ManufacturerInfoHandler)
 		app.POST("/query/manufacturers/", ManufacturerListHandler)
 	}
