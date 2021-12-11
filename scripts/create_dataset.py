@@ -12,6 +12,7 @@ goods_id, users_id = [], []
 employees_id, shops_id = [], []
 comments_id = []
 
+
 def create_goods(dataset: str, count: int = 1000):
     global goods_id
 
@@ -151,7 +152,8 @@ def create_comments(dataset: str, count: int = 1000):
             nodes.append([fake.unique.uuid4(), parent])
 
         for node in copy(nodes):
-            nodes.extend(make_tree(node[0], depth + 1, max_children, max_depth))
+            nodes.extend(
+                make_tree(node[0], depth + 1, max_children, max_depth))
 
         return nodes
 
@@ -178,6 +180,7 @@ def create_comments(dataset: str, count: int = 1000):
                     fake.text()[:2000]
                 ]
             )
+
 
 def create_reviews(dataset: str, count: int = 1000, max_rating: float = 10.0):
     global shops_id, employees_id, goods_id, users_id, comments_id
@@ -219,11 +222,13 @@ def create_reviews(dataset: str, count: int = 1000, max_rating: float = 10.0):
             )
             comments_id.remove(c)
 
+
 def run_io_tasks_in_parallel(tasks):
     with ThreadPoolExecutor() as executor:
         running_tasks = [executor.submit(task) for task in tasks]
         for running_task in running_tasks:
             running_task.result()
+
 
 def main():
     dpath = p.abspath(p.join(p.dirname(p.abspath(__file__)), pardir))
@@ -248,6 +253,7 @@ def main():
     create_reviews(dataset, size)
 
     print("finished", datetime.datetime.now().strftime("%H:%M:%S"))
+
 
 if __name__ == "__main__":
     main()

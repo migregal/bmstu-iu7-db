@@ -16,7 +16,6 @@ services:
       - 3000:3000
       - 8000:80
     depends_on:
-      - db
       - app
 
   app:
