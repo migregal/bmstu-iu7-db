@@ -10,7 +10,7 @@ services:
   react-frontend:
     container_name: frontdbcourse
     build:
-      context: ./lab_06/front
+      context: ./lab_06/src/front
       target: production
     ports:
       - 3000:3000
@@ -20,7 +20,7 @@ services:
 
   app:
     build:
-      context: ./lab_06/coke
+      context: ./lab_06/src/coke
     container_name: appdbcourse
     ports:
       - 5000:5000
@@ -42,13 +42,13 @@ services:
       PGDATA: /data/postgres
     volumes:
       - ./dataset:/dataset
-      - ./lab_01:/lab_01
-      - ./lab_02:/lab_02
-      - ./lab_03:/lab_03
-      - ./lab_04:/lab_04
-      - ./lab_05:/lab_05
-      - ./lab_06:/lab_06
-      - ./lab_08:/lab_08
+      - ./lab_01/src:/lab_01
+      - ./lab_02/src:/lab_02
+      - ./lab_03/src:/lab_03
+      - ./lab_04/src:/lab_04
+      - ./lab_05/src:/lab_05
+      - ./lab_06/src:/lab_06
+      - ./lab_08/src:/lab_08
     ports:
       - 5432:5432
     restart: unless-stopped
@@ -61,6 +61,6 @@ services:
       - NIFI_JVM_HEAP_INIT=2g
       - NIFI_JVM_HEAP_MAX=4g
     volumes:
-      - ./lab_08:/opt/nifi/nifi-current/userdata
+      - ./lab_08/src:/opt/nifi/nifi-current/userdata
     ports:
       - 8080:8080
