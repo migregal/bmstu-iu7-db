@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS additional;
+CREATE DATABASE database additional;
+\c additional;
+
 DROP TABLE empl_visits;
 
 CREATE TABLE IF NOT EXISTS empl_visits
@@ -22,12 +26,12 @@ INSERT INTO empl_visits(department, fio, empl_dt, status) VALUES
 ('Бухгалтерия','Петрова Ирина Ивановна','2020-01-19','Оплачиваемый отпуск'),
 ('Бухгалтерия','Петрова Ирина Ивановна','2020-01-20','Оплачиваемый отпуск');
 
-with numbered AS (
-    select row_number() over(
-        partition by fio, status
-        order by empl_dt
-    ) as i, department, fio, status, empl_dt
-    from empl_visits
+WITH numbered AS (
+    SELECT row_number() OVER(
+        PARTITION BY fio, status
+        ORDER BY empl_dt
+    ) AS i, department, fio, status, empl_dt
+    FROM empl_visits
 )
 SELECT department, fio, min(empl_dt) as date_from, max(empl_dt) as date_to, status
 FROM numbered n

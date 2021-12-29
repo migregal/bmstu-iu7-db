@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS additional;
+CREATE DATABASE database additional;
+\c additional;
+
 CREATE TABLE IF NOT EXISTS Table1(
   id                INTEGER,
   var1              VARCHAR,
