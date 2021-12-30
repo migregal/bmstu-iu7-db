@@ -49,6 +49,7 @@ services:
       - ./lab_05/src:/lab_05
       - ./lab_06/src:/lab_06
       - ./lab_08/src:/lab_08
+      - ./additional:/additional
     ports:
       - 5432:5432
     restart: unless-stopped
