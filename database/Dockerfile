@@ -1,4 +1,4 @@
-FROM postgres
+FROM postgres:14.1
 LABEL maintainer="Gregory @migregal Mironov"
 
 RUN apt-get update

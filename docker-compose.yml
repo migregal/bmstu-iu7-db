@@ -31,8 +31,7 @@ services:
 
   db:
     build:
-      context: .
-      dockerfile: Dockerfile.db
+      context: ./database
     container_name: postgresdbcourse
     env_file:
       - .env
