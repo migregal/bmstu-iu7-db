@@ -38,7 +38,7 @@ func ReviewsStatsHandler(c buffalo.Context) error {
 	}
 
 	var reviews []models.ReviewStats
-	if c.Request().URL.Query().Get("cahced") != "" {
+	if c.Request().URL.Query().Get("cached") != "" {
 		if err := redis.Cache.Get(
 			ctx,
 			string(jsonData),
@@ -65,7 +65,7 @@ func ReviewsStatsHandler(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
-	if c.Request().URL.Query().Get("cahced") != "" {
+	if c.Request().URL.Query().Get("cached") != "" {
 		if err := redis.Cache.Set(&cache.Item{
 			Ctx:   ctx,
 			Key:   string(jsonData),
